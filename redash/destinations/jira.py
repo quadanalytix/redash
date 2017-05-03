@@ -29,6 +29,10 @@ class Jira(BaseDestination):
                 'priority': {
                     'type': 'string',
                     'title': 'Priority'
+                },
+                'assignee': {
+                    'type': 'string',
+                    'title': 'Assignee'
                 }
             }
         }
@@ -44,7 +48,7 @@ class Jira(BaseDestination):
 
         auth = BasicAuth(username, password)
 
-        server_url = "https://quadanalytix.atlassian.net"
+        server_url = os.environ.get('SERVER_URL','')
         resource_name = "issue"
         complete_url = "%s/rest/api/latest/%s/" % (server_url, resource_name)
         resource = Resource(complete_url, filters=[auth])
@@ -54,6 +58,7 @@ class Jira(BaseDestination):
         if options.get('summary'): summary = options.get('summary')
         if options.get('description'): description = options.get('description')
         if options.get('priority'): priority = options.get('priority')
+        if options.get('assignee'): assignee = options.get('assignee')
 
         data = {
             "fields": {
@@ -67,6 +72,9 @@ class Jira(BaseDestination):
                 },
                 "priority": {
                     "name": priority
+                },
+                "assignee": {
+                    "name": assignee
                 }
             }
         }
